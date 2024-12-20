@@ -1,0 +1,16 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Configuration;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.Data;
+global using System.Diagnostics;
+global using System.Linq.Expressions;
+global using Microsoft.AspNetCore.Identity;
+global using System.Threading.Tasks;
+global using Microsoft.IdentityModel.Tokens;
+global using System;
+global using System.IdentityModel.Tokens.Jwt;
+global using System.Security.Claims;
+global using System.Text;
+global using System.Linq;
+global using System.Collections.Generic;
+global using System.Threading;

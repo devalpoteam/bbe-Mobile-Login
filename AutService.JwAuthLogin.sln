@@ -1,0 +1,57 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01-Presentation", "01-Presentation", "{5CDD80F8-A79C-45CF-93BE-27450137E87C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02-Aplication", "02-Aplication", "{15403DCC-93F2-4DDE-83AC-6B2F0BF4F8E4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03-Model", "03-Model", "{1CD666EF-5AFE-4151-8459-FFBD5C87DE26}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04-Infrastructure", "04-Infrastructure", "{F3E6CB8D-8DAA-4643-80FE-436D14CF3880}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutService.JwAuthLogin.Api", "AutService.JwAuthLogin.Api\AutService.JwAuthLogin.Api.csproj", "{14DE3269-DD24-4427-A89C-362CAC917C0F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutService.JwAuthLogin.Infrastructure", "AutService.JwAuthLogin.Infrastructure\AutService.JwAuthLogin.Infrastructure.csproj", "{191CA67F-3B53-4FA7-A92F-D99B9507F5F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutService.JwAuthLogin.Application", "AutService.JwAuthLogin.Application\AutService.JwAuthLogin.Application.csproj", "{3E10D05C-CA75-447C-8057-9DDD13845415}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutService.JwAuthLogin.Domain", "AutService.JwAuthLogin.Domain\AutService.JwAuthLogin.Domain.csproj", "{41E24938-13DA-4FC0-BB0D-675B74CF8B17}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{14DE3269-DD24-4427-A89C-362CAC917C0F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14DE3269-DD24-4427-A89C-362CAC917C0F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14DE3269-DD24-4427-A89C-362CAC917C0F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14DE3269-DD24-4427-A89C-362CAC917C0F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{191CA67F-3B53-4FA7-A92F-D99B9507F5F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{191CA67F-3B53-4FA7-A92F-D99B9507F5F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{191CA67F-3B53-4FA7-A92F-D99B9507F5F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{191CA67F-3B53-4FA7-A92F-D99B9507F5F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E10D05C-CA75-447C-8057-9DDD13845415}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E10D05C-CA75-447C-8057-9DDD13845415}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E10D05C-CA75-447C-8057-9DDD13845415}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E10D05C-CA75-447C-8057-9DDD13845415}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41E24938-13DA-4FC0-BB0D-675B74CF8B17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41E24938-13DA-4FC0-BB0D-675B74CF8B17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41E24938-13DA-4FC0-BB0D-675B74CF8B17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41E24938-13DA-4FC0-BB0D-675B74CF8B17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{14DE3269-DD24-4427-A89C-362CAC917C0F} = {5CDD80F8-A79C-45CF-93BE-27450137E87C}
+		{191CA67F-3B53-4FA7-A92F-D99B9507F5F8} = {F3E6CB8D-8DAA-4643-80FE-436D14CF3880}
+		{3E10D05C-CA75-447C-8057-9DDD13845415} = {15403DCC-93F2-4DDE-83AC-6B2F0BF4F8E4}
+		{41E24938-13DA-4FC0-BB0D-675B74CF8B17} = {1CD666EF-5AFE-4151-8459-FFBD5C87DE26}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {516DB1BD-C379-43BC-B882-E37476C74A86}
+	EndGlobalSection
+EndGlobal
