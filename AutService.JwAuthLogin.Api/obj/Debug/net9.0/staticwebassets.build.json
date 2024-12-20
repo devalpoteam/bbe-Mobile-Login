@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "lJ+z9vtXQmUvEr98+Kf8zychyn0vX63cIlqh9Syba2M=",
+  "Source": "AutService.JwAuthLogin.Api",
+  "BasePath": "_content/AutService.JwAuthLogin.Api",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}
