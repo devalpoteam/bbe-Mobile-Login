@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
+using System.Security.Claims;
 using System.Text;
 
 namespace AutService.JwAuthLogin.Api.Extensions
@@ -20,6 +20,9 @@ namespace AutService.JwAuthLogin.Api.Extensions
                 options.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<DatabaseContext>()
               .AddDefaultTokenProviders();
+            
+            services.AddAuthorizationBuilder()
+                    .AddPolicy("AdminPolicy", policy => policy.RequireRole("Admin"));
 
             services.AddAuthentication(x =>
             {
@@ -40,7 +43,8 @@ namespace AutService.JwAuthLogin.Api.Extensions
                     ValidIssuer = jwtSettings["Issuer"],
                     ValidateAudience = true,
                     ValidAudience = jwtSettings["Audience"],
-                    ValidateLifetime = true
+                    ValidateLifetime = true,
+                    RoleClaimType = ClaimTypes.Role // Configurar cómo se identifican los roles en los tokens
                 };
             })
              .AddGoogleOpenIdConnect(options =>

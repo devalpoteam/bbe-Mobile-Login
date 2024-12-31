@@ -5,10 +5,14 @@ using AutService.JwAuthLogin.Domain.Models.Auth;
 
 namespace AutService.JwAuthLogin.Infrastructure.Repositories
 {
-    public class UserRepository(IConfiguration configuration, UserManager<AppUser> userManager, SignInManager<AppUser> signInManager):IUserRepository
+    public class UserRepository(IConfiguration configuration, 
+                                UserManager<AppUser> userManager, 
+                                SignInManager<AppUser> signInManager,
+                                RoleManager<IdentityRole> roleManager) :IUserRepository
     {
         private readonly UserManager<AppUser> _userManager = userManager;
         private readonly SignInManager<AppUser> _signInManager = signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly IConfiguration _configuration = configuration;
 
         public async Task<UserToken> GetOrCreateExternalLoginUser(string key, string email, string fullname)
@@ -33,12 +37,11 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                     }
                 }
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                return GenerateUserToken(user);
+                var roles = await _userManager.GetRolesAsync(user); // Obtener los roles del usuario
+                return GenerateUserToken(user, roles);
             }
             catch (InvalidOperationException ex)
             {
-                // Registrar los detalles de la excepción
-                // Manejar el caso específico de la conexión cerrada
                 throw new AppException("Problema de conexión a la base de datos", ex);
             }
             catch (Exception e) {
@@ -75,11 +78,44 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             {
                 throw new AppException("Email o contraseña incorrectos.");
             }
+            var roles = await _userManager.GetRolesAsync(user); // Obtener los roles del usuario
+            return GenerateUserToken(user, roles);
+        }
+        public async Task<bool> CreateRole(string roleName) {
+            if (await _roleManager.RoleExistsAsync(roleName))
+                return false;
 
-            return GenerateUserToken(user);
+            var result = await _roleManager.CreateAsync(new IdentityRole(roleName));
+            if (result.Succeeded)
+                return true;
+            return false;
+        }
+        public async Task<string> AssignRole(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return  "Usuario no encontrado." ;
+
+            if (!await _roleManager.RoleExistsAsync(roleName))
+                return "Rol no encontrado.";
+
+            var result = await _userManager.AddToRoleAsync(user, roleName);
+            if (result.Succeeded)
+                return $"Rol {roleName} asignado a {email}.";
+
+            throw new AppException($"Error al registrar el usuario {email} al rol {roleName}");
+        }
+        public async Task<List<string>> GetUserRoles(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+                return ["Usuario no encontrado."];
+
+            var roles = await _userManager.GetRolesAsync(user);
+            return [.. roles];
         }
         #region Private Methods
-        private UserToken GenerateUserToken(AppUser user)
+        private UserToken GenerateUserToken(AppUser user, IList<string> roles)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
 
@@ -92,22 +128,31 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             var key = Encoding.ASCII.GetBytes(secret);
 
             var expires = DateTime.UtcNow.AddDays(7);
+
+            // Crear lista de claims base para el usuario
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, user.Id),
+                new Claim(JwtRegisteredClaimNames.Sub, _configuration["Authentication:Jwt:Subject"] ?? throw new AppException("JWT Subject is not configured.")),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
+                new Claim(ClaimTypes.Name, user.Id),
+                new Claim(ClaimTypes.Name, user.UserName ?? throw new AppException("UserName is null.")),
+                new Claim(ClaimTypes.NameIdentifier, user.UserName ?? throw new AppException("UserName is null.")),
+                new Claim(ClaimTypes.Email, user.Email ?? throw new AppException("Email is null."))
+            };
+
+            // Agregar los roles como claims
+            foreach (var role in roles)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, role));
+            }
+
+            // Crear el descriptor del token
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[]
-                {
-                        new Claim(ClaimTypes.Name, user.Id),
-                        new Claim(JwtRegisteredClaimNames.Sub, _configuration["Authentication:Jwt:Subject"] ?? throw new AppException("JWT Subject is not configured.")),
-                        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                        new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                        new Claim(ClaimTypes.Name, user.Id),
-                        new Claim(ClaimTypes.Name, user.UserName ?? throw new AppException("UserName is null.")),
-                        new Claim(ClaimTypes.NameIdentifier, user.UserName ?? throw new AppException("UserName is null.")),
-                        new Claim(ClaimTypes.Email, user.Email ?? throw new AppException("Email is null."))
-                    }),
-
+                Subject = new ClaimsIdentity(claims),
                 Expires = expires,
-
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
                 Issuer = _configuration["Authentication:Jwt:Issuer"],
                 Audience = _configuration["Authentication:Jwt:Audience"]
@@ -125,6 +170,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 Expires = expires
             };
         }
+
         #endregion
     }
 }

@@ -13,7 +13,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Configurations
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<UserManager<AppUser>, UserManager<AppUser>>();
             services.AddScoped<SignInManager<AppUser>, SignInManager<AppUser>>();
-
+            services.AddScoped<RoleManager<IdentityRole>, RoleManager<IdentityRole>>();
         }
     }
 }

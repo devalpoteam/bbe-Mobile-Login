@@ -8,5 +8,8 @@ namespace AutService.JwAuthLogin.Application.Contracts
         Task<UserToken> GetOrCreateExternalLoginUser(string key, string email, string fullname);
         Task<IdentityResult> CreateUserAsync(string email, string password, string fullname);
         Task<UserToken> AuthenticateUserAsync(string email, string password);
+        Task<bool> CreateRole(string roleName);
+        Task<string> AssignRole(string email, string roleName);
+        Task<List<string>> GetUserRoles(string email);
     }
 }

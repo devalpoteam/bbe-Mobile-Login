@@ -47,7 +47,9 @@ try
     using (var scope = app.Services.CreateScope())
     {
         var scopeFactory = scope.ServiceProvider.GetRequiredService<IServiceScopeFactory>();
+        var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
         await scopeFactory.EnsureDatabaseMigratedAsync();
+        await scopeFactory.EnsureCreatedUserAdminAsync(configuration);
     }
 
     await app.RunAsync();

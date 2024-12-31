@@ -54,7 +54,6 @@ namespace AutService.JwAuthLogin.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-
             try
             {
                 await _userRepository.CreateUserAsync(model.Email, model.Password, model.FullName);
@@ -62,7 +61,7 @@ namespace AutService.JwAuthLogin.Api.Controllers
             }
             catch (AppException ex)
             {
-                return BadRequest(new { Message = ex.Message });
+                return BadRequest(new { ex.Message });
             }
         }
         [HttpPost("login")]
@@ -79,13 +78,13 @@ namespace AutService.JwAuthLogin.Api.Controllers
                 return Ok(new
                 {
                     Message = "Autenticación exitosa.",
-                    Token = token.Token,
-                    Expires = token.Expires
+                    token.Token,
+                    token.Expires
                 });
             }
             catch (AppException ex)
             {
-                return Unauthorized(new { Message = ex.Message });
+                return Unauthorized(new {ex.Message });
             }
         }
 

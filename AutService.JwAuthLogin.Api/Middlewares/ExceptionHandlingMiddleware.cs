@@ -12,7 +12,6 @@ namespace AutService.JwAuthLogin.Api.Middlewares
 
         public ExceptionHandlingMiddleware(ILogger<ExceptionHandlingMiddleware> logger) => _logger = logger;
 
-
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
             try
