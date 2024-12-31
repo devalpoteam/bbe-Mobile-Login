@@ -23,3 +23,4 @@ C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Domain\obj\Debug\net9.0\AutS
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Domain\obj\Debug\net9.0\refint\AutService.JwAuthLogin.Domain.dll
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Domain\obj\Debug\net9.0\AutService.JwAuthLogin.Domain.pdb
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Domain\obj\Debug\net9.0\ref\AutService.JwAuthLogin.Domain.dll
+C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Domain\obj\Debug\net9.0\AutService.JwAuthLogin.Domain.sourcelink.json

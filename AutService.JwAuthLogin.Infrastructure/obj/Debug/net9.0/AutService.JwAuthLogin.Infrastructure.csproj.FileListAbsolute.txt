@@ -37,3 +37,4 @@ C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Infrastructure\obj\Debug\net
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Infrastructure\obj\Debug\net9.0\AutService.JwAuthLogin.Infrastructure.pdb
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Infrastructure\obj\Debug\net9.0\AutService.JwAuthLogin.Infrastructure.genruntimeconfig.cache
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Infrastructure\obj\Debug\net9.0\ref\AutService.JwAuthLogin.Infrastructure.dll
+C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Infrastructure\obj\Debug\net9.0\AutService.JwAuthLogin.Infrastructure.sourcelink.json
