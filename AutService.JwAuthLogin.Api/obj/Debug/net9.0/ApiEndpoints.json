@@ -59,27 +59,6 @@
   },
   {
     "ContainingType": "AutService.JwAuthLogin.Api.Controllers.RolesController",
-    "Method": "assign",
-    "RelativePath": "api/Roles/assign",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "email",
-        "Type": "System.String",
-        "IsRequired": false
-      },
-      {
-        "Name": "roleName",
-        "Type": "System.String",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "AutService.JwAuthLogin.Api.Controllers.RolesController",
     "Method": "AssignRole",
     "RelativePath": "api/Roles/assign-role",
     "HttpMethod": "POST",
@@ -113,6 +92,16 @@
         "IsRequired": false
       }
     ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "AutService.JwAuthLogin.Api.Controllers.RolesController",
+    "Method": "GetUserProfile",
+    "RelativePath": "api/Roles/profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
     "ReturnTypes": []
   },
   {
