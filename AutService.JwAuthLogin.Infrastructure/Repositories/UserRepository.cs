@@ -2,6 +2,7 @@
 using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Domain.Exceptions;
 using AutService.JwAuthLogin.Domain.Models.Auth;
+using AutService.JwAuthLogin.Domain.Models.Response;
 
 namespace AutService.JwAuthLogin.Infrastructure.Repositories
 {
@@ -114,6 +115,34 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             var roles = await _userManager.GetRolesAsync(user);
             return [.. roles];
         }
+        public async Task<List<UserModel>> GetAllUser()
+        {
+            return await _userManager.Users.Select(u => new UserModel
+            {
+                Email = u.Email,
+                UserId = u.Id,
+                UserName = u.UserName
+            }).ToListAsync();
+        }
+        public async Task<bool> UpdateUserRole(UserModel model)
+        {
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return false;// return NotFound(new { message = "Usuario no encontrado." });
+            }
+
+            user.Email = model.Email;
+            user.UserName = model.UserName;
+
+            var result = await _userManager.UpdateAsync(user);
+            if (!result.Succeeded)
+            {
+                return false;//( return BadRequest(new { message = "No se pudo actualizar el usuario." });
+            }
+
+            return true;// Ok(new { message = "Usuario actualizado con éxito." });
+        }
         #region Private Methods
         private UserToken GenerateUserToken(AppUser user, IList<string> roles)
         {
@@ -170,7 +199,6 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 Expires = expires
             };
         }
-
         #endregion
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Domain.Models.Auth;
+using AutService.JwAuthLogin.Domain.Models.Response;
 
 namespace AutService.JwAuthLogin.Application.Contracts
 {
@@ -11,5 +12,8 @@ namespace AutService.JwAuthLogin.Application.Contracts
         Task<bool> CreateRole(string roleName);
         Task<string> AssignRole(string email, string roleName);
         Task<List<string>> GetUserRoles(string email);
+        Task<List<UserModel>> GetAllUser();
+        Task<bool> UpdateUserRole(UserModel user);
+
     }
 }

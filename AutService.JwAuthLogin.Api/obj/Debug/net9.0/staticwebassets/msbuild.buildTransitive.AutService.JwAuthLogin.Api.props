@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\AutService.JwAuthLogin.Api.props" />
-</Project>
