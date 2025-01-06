@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AutService.JwAuthLogin.Application")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8d687549968426608cdfe5a014984504bfb04c97")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ed1fc096233955a5ed3a7b18bfba7dd24f8917cd")]
 [assembly: System.Reflection.AssemblyProductAttribute("AutService.JwAuthLogin.Application")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AutService.JwAuthLogin.Application")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -386,3 +386,4 @@ C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Api\obj\Debug\net9.0\AutServ
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Api\obj\Debug\net9.0\AutService.JwAuthLogin.Api.genruntimeconfig.cache
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Api\obj\Debug\net9.0\ref\AutService.JwAuthLogin.Api.dll
 C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Api\obj\Debug\net9.0\AutService.JwAuthLogin.Api.sourcelink.json
+C:\DeValpo\APPGimnasia\Login\AutService.JwAuthLogin.Api\bin\Debug\net9.0\Swashbuckle.AspNetCore.Annotations.dll
