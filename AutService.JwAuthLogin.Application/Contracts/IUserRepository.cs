@@ -1,6 +1,9 @@
 ﻿using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Domain.Models.Auth;
+using AutService.JwAuthLogin.Domain.Models.Request;
 using AutService.JwAuthLogin.Domain.Models.Response;
+using Microsoft.AspNetCore.Mvc;
+using System.Reflection;
 
 namespace AutService.JwAuthLogin.Application.Contracts
 {
@@ -14,6 +17,8 @@ namespace AutService.JwAuthLogin.Application.Contracts
         Task<List<string>> GetUserRoles(string email);
         Task<List<UserModel>> GetAllUser();
         Task<bool> UpdateUserRole(UserModel user);
-
+        Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal user);
+        Task<string> ForgotPassword(string email);
+        Task<bool> ResetPassword(string email, string Token, string NewPassword);       
     }
 }

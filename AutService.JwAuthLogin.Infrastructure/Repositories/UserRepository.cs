@@ -2,6 +2,7 @@
 using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Domain.Exceptions;
 using AutService.JwAuthLogin.Domain.Models.Auth;
+using AutService.JwAuthLogin.Domain.Models.Request;
 using AutService.JwAuthLogin.Domain.Models.Response;
 
 namespace AutService.JwAuthLogin.Infrastructure.Repositories
@@ -142,6 +143,51 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             }
 
             return true;// Ok(new { message = "Usuario actualizado con éxito." });
+        }
+        public async Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal User)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null)
+            {
+                return false;
+            }
+            var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+
+            return true;
+        }
+        public async Task<string> ForgotPassword(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                // No revelamos si el email existe por razones de seguridad
+                return null;
+            }
+            // Generar el token de restablecimiento
+            var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+            return resetToken;
+        }
+        public async Task<bool> ResetPassword(string email,string Token, string NewPassword)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var result = await _userManager.ResetPasswordAsync(user, Token, NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+            return true;
+
         }
         #region Private Methods
         private UserToken GenerateUserToken(AppUser user, IList<string> roles)

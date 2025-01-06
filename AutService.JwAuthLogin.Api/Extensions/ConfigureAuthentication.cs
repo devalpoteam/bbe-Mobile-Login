@@ -1,4 +1,5 @@
-﻿using AutService.JwAuthLogin.Domain.Entities;
+﻿using AutService.JwAuthLogin.Api.Services;
+using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -18,6 +19,11 @@ namespace AutService.JwAuthLogin.Api.Extensions
             services.AddIdentity<AppUser, IdentityRole>(options =>
             {
                 options.User.RequireUniqueEmail = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
             }).AddEntityFrameworkStores<DatabaseContext>()
               .AddDefaultTokenProviders();
             
@@ -45,6 +51,18 @@ namespace AutService.JwAuthLogin.Api.Extensions
                     ValidAudience = jwtSettings["Audience"],
                     ValidateLifetime = true,
                     RoleClaimType = ClaimTypes.Role // Configurar cómo se identifican los roles en los tokens
+                };
+                x.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var token = context.Request.Headers["Authorization"].ToString()?.Replace("Bearer ", "");
+                        if (TokenRevocationService.IsTokenRevoked(token))
+                        {
+                            context.Fail("El token ha sido revocado.");
+                        }
+                        return Task.CompletedTask;
+                    }
                 };
             })
              .AddGoogleOpenIdConnect(options =>

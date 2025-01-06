@@ -1,5 +1,6 @@
 using AutService.JwAuthLogin.Api.Extensions;
 using AutService.JwAuthLogin.Api.Middlewares;
+using AutService.JwAuthLogin.Api.Services;
 using AutService.JwAuthLogin.Infrastructure.Context;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using SegurosSura.Facturacion.Core.Api.Configuration;
@@ -16,6 +17,7 @@ try
     builder.Services.ConfigureAppSqlDatabase(builder.Configuration);
     builder.Services.AddAppIdentity(builder.Configuration);
     builder.Services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
+    builder.Services.AddHostedService<TokenCleanupService>();
 
     builder.Services.AddMvc(options => options.RespectBrowserAcceptHeader = true);
   

@@ -1,8 +1,10 @@
-﻿using AutService.JwAuthLogin.Application.Contracts;
+﻿using AutService.JwAuthLogin.Api.Services;
+using AutService.JwAuthLogin.Application.Contracts;
 using AutService.JwAuthLogin.Domain.Exceptions;
 using AutService.JwAuthLogin.Domain.Models.Request;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Security.Claims;
@@ -116,6 +118,26 @@ namespace AutService.JwAuthLogin.Api.Controllers
             {
                 return Unauthorized(new { ex.Message });
             }
+        }
+        /// <summary>
+        /// Cierra la sesión del usuario actual.
+        /// </summary>
+        /// <remarks>
+        /// Este endpoint simplemente elimina cualquier token activo almacenado en memoria o base de datos si se usa revocación de tokens.
+        /// </remarks>
+        /// <returns>Mensaje indicando el resultado de la operación.</returns>
+        [HttpPost("logout")]
+        [Authorize] // Solo usuarios autenticados pueden cerrar sesión
+        public IActionResult Logout()
+        {
+            var token = Request.Headers.Authorization.ToString()?.Replace("Bearer ", "");
+            if (!string.IsNullOrEmpty(token))
+            {
+                // Revocar el token actual
+                TokenRevocationService.RevokeToken(token, DateTime.UtcNow.AddHours(1)); // Asume una duración de 1 hora para el token
+            }
+
+            return Ok(new { message = "Sesión cerrada con éxito." });
         }
     }
 }
