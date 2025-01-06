@@ -5,3 +5,14 @@
 /.vs
 /bin
 /obj
+/AutService.JwAuthLogin.Api/bin
+/AutService.JwAuthLogin.Api/obj
+/AutService.JwAuthLogin.Application/bin/Debug/net9.0
+/AutService.JwAuthLogin.Application/obj/Debug/net9.0
+/AutService.JwAuthLogin.Application/obj
+/AutService.JwAuthLogin.Domain/bin/Debug/net9.0
+/AutService.JwAuthLogin.Domain/obj/Debug/net9.0
+/AutService.JwAuthLogin.Domain/obj
+/AutService.JwAuthLogin.Infrastructure/bin/Debug/net9.0
+/AutService.JwAuthLogin.Infrastructure/obj/Debug/net9.0
+/AutService.JwAuthLogin.Infrastructure/obj
