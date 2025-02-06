@@ -1,5 +1,10 @@
-﻿using AutService.JwAuthLogin.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Identity;
+using AutService.JwAuthLogin.Domain.Entities;
 using AutService.JwAuthLogin.Domain.ValueObject;
+
 namespace AutService.JwAuthLogin.Infrastructure.Context
 {
     public static class SetupPersistence
@@ -8,13 +13,11 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
         {
             var databaseSetting = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
             services.AddDbContext<DatabaseContext>(it =>
-                it.UseSqlServer(databaseSetting!.ConnectionString)
+                it.UseNpgsql(databaseSetting!.ConnectionString) // 💡 Cambiado a PostgreSQL
                 , ServiceLifetime.Scoped
-                
-                ); 
-
-           // );
+            );
         }
+
         public static async Task EnsureDatabaseMigratedAsync(this IServiceScopeFactory scopeFactory)
         {
             try
@@ -38,6 +41,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
                 throw new Exception("Error ensuring the database is migrated", e);
             }
         }
+
         public static async Task EnsureCreatedUserAdminAsync(this IServiceScopeFactory scopeFactory, IConfiguration configuration)
         {
             try
@@ -75,6 +79,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
                             throw new Exception($"Error al crear el usuario {userConfig.Email}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                         }
                     }
+
                     // Asignar roles al usuario
                     foreach (var role in userConfig.Roles)
                     {
@@ -90,7 +95,5 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
                 throw new Exception("Error ensuring the database is migrated", e);
             }
         }
-
-        
     }
 }
