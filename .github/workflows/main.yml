@@ -28,10 +28,14 @@ jobs:
 
     - name: Build imagen Docker con tags
       run: |
-        docker build -t ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest \
-                     -t ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:sha-${{ env.SHORT_SHA }} .
-
+        IMAGE=ghcr.io/${{ github.repository_owner }}/appgimnasia.login
+        IMAGE_LOWER=$(echo $IMAGE | tr '[:upper:]' '[:lower:]')
+        docker build -t $IMAGE_LOWER:latest -t $IMAGE_LOWER:sha-${{ env.SHORT_SHA }} .
+        
     - name: Push de imágenes
       run: |
-        docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-        docker push ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:sha-${{ env.SHORT_SHA }}
+          IMAGE=ghcr.io/${{ github.repository_owner }}/appgimnasia.login
+          IMAGE_LOWER=$(echo $IMAGE | tr '[:upper:]' '[:lower:]')
+          docker push $IMAGE_LOWER:latest
+          docker push $IMAGE_LOWER:sha-${{ env.SHORT_SHA }}
+
