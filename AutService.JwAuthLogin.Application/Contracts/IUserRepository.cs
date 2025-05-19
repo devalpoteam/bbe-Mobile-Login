@@ -19,6 +19,7 @@ namespace AutService.JwAuthLogin.Application.Contracts
         Task<bool> UpdateUserRole(UserModel user);
         Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal user);
         Task<string> ForgotPassword(string email);
-        Task<bool> ResetPassword(string email, string Token, string NewPassword);       
+        Task<bool> ResetPassword(string email, string Token, string NewPassword);
+        Task<bool> DeleteUser(string email);
     }
 }
