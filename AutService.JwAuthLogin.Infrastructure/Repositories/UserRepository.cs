@@ -122,10 +122,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             {
                 Email = u.Email,
                 UserId = u.Id,
-                UserName = u.UserName,
-                FullName = u.FullName
-
-
+                UserName = u.UserName
             }).ToListAsync();
         }
         public async Task<bool> UpdateUserRole(UserModel model)
@@ -138,7 +135,6 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
 
             user.Email = model.Email;
             user.UserName = model.UserName;
- 
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -248,21 +244,6 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 Token = token,
                 Expires = expires
             };
-        }
-        //Delete user
-        public async Task<bool> DeleteUser(string email)
-        {
-            var user = await _userManager.FindByEmailAsync(email);
-            if (user == null)
-            {
-                return false;
-            }
-            var result = await _userManager.DeleteAsync(user);
-            if (!result.Succeeded)
-            {
-                return false;
-            }
-            return true;
         }
         #endregion
     }

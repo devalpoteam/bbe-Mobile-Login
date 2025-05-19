@@ -52,21 +52,6 @@ namespace AutService.JwAuthLogin.Api.Controllers
             return Ok(new { message = "Usuario actualizado con éxito." });
         }
 
-        ///<summary>
-        ///Eliminar un usuario.
-        ///</summary>
-        [HttpDelete("delete")]
-        [Authorize]
-        public async Task<IActionResult> DeleteUser(string email)
-        {
-            var result = await _userRepository.DeleteUser(email);
-            if (!result)
-            {
-                return BadRequest(new { message = "No se pudo eliminar el usuario." });
-            }
-            return Ok(new { message = "Usuario eliminado con éxito." });
-        }
-
         /// <summary>
         /// Cambia la contraseña del usuario autenticado.
         /// </summary>

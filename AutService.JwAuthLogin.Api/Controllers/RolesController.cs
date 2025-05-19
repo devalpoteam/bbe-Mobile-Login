@@ -77,8 +77,9 @@ namespace AutService.JwAuthLogin.Api.Controllers
         public IActionResult GetUserProfile()
         {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
-            var username = User.FindFirst(ClaimTypes.Name)?.Value;
+            var username = User.Identity.Name;
             var roles = User.FindAll(ClaimTypes.Role).Select(r => r.Value).ToList();
+
             return Ok(new
             {
                 Email = email,
