@@ -11,11 +11,22 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
     {
         public static void ConfigureAppSqlDatabase(this IServiceCollection services, IConfiguration configuration)
         {
-            var databaseSetting = configuration.GetSection(nameof(DatabaseSettings)).Get<DatabaseSettings>();
-            services.AddDbContext<DatabaseContext>(it =>
-                it.UseNpgsql(databaseSetting!.ConnectionString) // 💡 Cambiado a PostgreSQL
-                , ServiceLifetime.Scoped
-            );
+            // Lee de variable de entorno (Railway)
+            var envConnectionString = Environment.GetEnvironmentVariable("dbc");
+
+            // Lee del appsettings.json si no está en el entorno
+            var configConnectionString = configuration.GetSection(nameof(DatabaseSettings))
+                                                       .Get<DatabaseSettings>()?.ConnectionString;
+
+            var finalConnectionString = !string.IsNullOrWhiteSpace(envConnectionString)
+                ? envConnectionString
+                : configConnectionString;
+
+            if (string.IsNullOrWhiteSpace(finalConnectionString))
+                throw new InvalidOperationException("No se encontró una cadena de conexión válida.");
+
+            services.AddDbContext<DatabaseContext>(options =>
+                options.UseNpgsql(finalConnectionString), ServiceLifetime.Scoped);
         }
 
         public static async Task EnsureDatabaseMigratedAsync(this IServiceScopeFactory scopeFactory)
