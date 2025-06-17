@@ -1,0 +1,57 @@
+name: Build and Push Docker Image to GHCR
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*'  # Detecta tags tipo v1.0.0, v1.1.3, etc.
+
+env:
+  IMAGE_NAME: appgimnasia.login
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+    - name: Checkout del código
+      uses: actions/checkout@v4
+
+    - name: Obtener short commit y tag
+      id: vars
+      run: |
+        echo "SHORT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        if [[ "${GITHUB_REF}" == refs/tags/* ]]; then
+          echo "VERSION_TAG=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        else
+          echo "VERSION_TAG=" >> $GITHUB_ENV
+        fi
+
+    - name: Login en GHCR
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+    - name: Build imagen Docker
+      run: |
+        IMAGE=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+        IMAGE_LOWER=$(echo $IMAGE | tr '[:upper:]' '[:lower:]')
+
+        docker build \
+          -t $IMAGE_LOWER:latest \
+          -t $IMAGE_LOWER:sha-${{ env.SHORT_SHA }} \
+          $( [ -n "${{ env.VERSION_TAG }}" ] && echo "-t $IMAGE_LOWER:${{ env.VERSION_TAG }}" ) \
+          .
+
+    - name: Push imágenes a GHCR
+      run: |
+        IMAGE=ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+        IMAGE_LOWER=$(echo $IMAGE | tr '[:upper:]' '[:lower:]')
+
+        docker push $IMAGE_LOWER:latest
+        docker push $IMAGE_LOWER:sha-${{ env.SHORT_SHA }}
+        if [ -n "${{ env.VERSION_TAG }}" ]; then
+          docker push $IMAGE_LOWER:${{ env.VERSION_TAG }}
+        fi
