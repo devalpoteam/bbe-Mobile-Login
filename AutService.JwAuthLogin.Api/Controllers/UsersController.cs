@@ -69,7 +69,7 @@ namespace AutService.JwAuthLogin.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var result = await _userRepository.ChangePassword(model,User);
+            var result = await _userRepository.ChangePassword(model, User);
             if (!result)
             {
                 return BadRequest(new { message = "o se pudo cambiar la contraseña." });
@@ -90,7 +90,7 @@ namespace AutService.JwAuthLogin.Api.Controllers
             {
                 // No revelamos si el email existe por razones de seguridad
                 return Ok(new { message = "Si el correo está registrado, se enviará un email con instrucciones para restablecer la contraseña." });
-            }           
+            }
 
             // Opcional: Enviar un enlace completo (si tienes una URL de frontend configurada)
             var resetUrl = $"https://frontend-url/reset-password?token={Uri.EscapeDataString(resetToken)}&email={Uri.EscapeDataString(model.Email)}";
@@ -113,13 +113,28 @@ namespace AutService.JwAuthLogin.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            var user = await _userRepository.ResetPassword(model.Email, model.Token,model.NewPassword);
+            var user = await _userRepository.ResetPassword(model.Email, model.Token, model.NewPassword);
             if (!user)
             {
                 return BadRequest(new { message = "No se pudo restablecer la contraseña." });
             }
 
             return Ok(new { message = "Contraseña restablecida con éxito." });
+        }
+
+        [HttpDelete("delete")]
+        public async Task<IActionResult> DeleteUser([FromBody] string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                return BadRequest(new { message = "El email no puede estar vacío." });
+            }
+            var result = await _userRepository.DeleteUser(email);
+            if (!result)
+            {
+                return BadRequest(new { message = "No se pudo eliminar el usuario." });
+            }
+            return Ok(new { message = "Usuario eliminado con éxito." });
         }
     }
 }

@@ -30,10 +30,10 @@ try
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "GOOGLE AUTH SAMPLE API V1");
         options.RoutePrefix = string.Empty;
     });
-    if (app.Environment.IsDevelopment())
-    {
+   // if (app.Environment.IsDevelopment())
+   // {
         app.UseDeveloperExceptionPage();
-    }
+   // }
     app.UseHttpsRedirection();
 
     app.UseMiddleware<ExceptionHandlingMiddleware>();

@@ -47,6 +47,21 @@ namespace AutService.JwAuthLogin.Api.Controllers
         {
             return Ok(await _userRepository.AssignRole(email, roleName));
         }
+        /// <summary>
+        /// Desasocia un rol de un usuario.
+        /// </summary>
+        /// <remarks>
+        /// Este endpoint permite a los administradores eliminar un rol de un usuario específico.
+        /// </remarks>
+        /// <param name="email">El email del usuario del cual se desea eliminar el rol.</param>
+        ///  <returns>Mensaje indicando el resultado de la operación.</returns>
+        [HttpPost("remove-role")]
+        [Authorize(Roles = "Admin")]
+        [SwaggerOperation(Summary = "Desasocia un rol de un usuario.", Description = "Este endpoint permite a los administradores eliminar un rol de un usuario.")]
+        public async Task<IActionResult> RemoveRole(string email, string roleName)
+        {
+            return Ok(await _userRepository.RemoveRole(email, roleName));
+        }
 
         /// <summary>
         /// Obtiene los roles de un usuario.

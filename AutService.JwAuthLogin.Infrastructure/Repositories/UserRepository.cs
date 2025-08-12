@@ -189,6 +189,41 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             return true;
 
         }
+        //Eliminar usuario 
+        public async Task<bool> DeleteUser(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        //Desasignar rol
+        public async Task<bool> RemoveRole(string email, string roleName)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return false;
+            }
+            if (!await _roleManager.RoleExistsAsync(roleName))
+            {
+                return false;
+            }
+            var result = await _userManager.RemoveFromRoleAsync(user, roleName);
+            if (!result.Succeeded)
+            {
+                return false;
+            }
+            return true;
+        }
         #region Private Methods
         private UserToken GenerateUserToken(AppUser user, IList<string> roles)
         {
