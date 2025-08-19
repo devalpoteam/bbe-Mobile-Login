@@ -10,7 +10,7 @@ namespace AutService.JwAuthLogin.Application.Contracts
     public interface IUserRepository
     {
         Task<UserToken> GetOrCreateExternalLoginUser(string key, string email, string fullname);
-        Task<IdentityResult> CreateUserAsync(string email, string password, string fullname);
+        Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad);
         Task<UserToken> AuthenticateUserAsync(string email, string password);
         Task<bool> CreateRole(string roleName);
         Task<string> AssignRole(string email, string roleName);

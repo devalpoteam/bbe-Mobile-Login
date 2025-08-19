@@ -14,5 +14,7 @@ namespace AutService.JwAuthLogin.Domain.Models.Request
 
         [Required]
         public string FullName { get; set; }
+        public string Sexo { get; set; }
+        public string Edad { get; set; }
     }
 }

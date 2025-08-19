@@ -50,7 +50,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 return null;
             }
         }
-        public async Task<IdentityResult> CreateUserAsync(string email, string password, string fullname)
+        public async Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
@@ -62,7 +62,9 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             {
                 UserName = email,
                 Email = email,
-                FullName = fullname
+                FullName = fullname,
+                Sexo = sexo,
+                Edad = edad,
             };
 
             var result = await _userManager.CreateAsync(user, password);

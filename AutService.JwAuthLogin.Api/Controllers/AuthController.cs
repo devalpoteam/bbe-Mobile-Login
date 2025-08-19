@@ -81,7 +81,7 @@ namespace AutService.JwAuthLogin.Api.Controllers
             }
             try
             {
-                await _userRepository.CreateUserAsync(model.Email, model.Password, model.FullName);
+                await _userRepository.CreateUserAsync(model.Email, model.Password, model.FullName,model.Sexo, model.Edad );
                 return Ok(new { Message = "Usuario creado exitosamente." });
             }
             catch (AppException ex)
