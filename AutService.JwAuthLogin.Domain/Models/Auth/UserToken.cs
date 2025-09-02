@@ -12,5 +12,7 @@ namespace AutService.JwAuthLogin.Domain.Models.Auth
         public string Token { get; set; }
         [JsonProperty("expires")]
         public DateTime Expires { get; set; }
+        [JsonProperty("premium")]
+        public bool premium { get; set; }
     }
 }

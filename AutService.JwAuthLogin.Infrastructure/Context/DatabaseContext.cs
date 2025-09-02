@@ -16,7 +16,8 @@ namespace AutService.JwAuthLogin.Infrastructure.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                var connectString = "Host=monorail.proxy.rlwy.net;Port=38363;Database=railway;Username=postgres;Password=UwZkkApkjjdOyInLCBbFjLURQwSrKSho;Timeout=30;SSL Mode=Require;Trust Server Certificate=true";
+                var connectString = "";
+
                 optionsBuilder.UseNpgsql(connectString);
             }
 

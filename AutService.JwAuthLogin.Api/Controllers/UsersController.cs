@@ -31,7 +31,13 @@ namespace AutService.JwAuthLogin.Api.Controllers
 
             return Ok(users);
         }
+        [HttpGet("Perfil")]
+        public async Task<IActionResult> GetByUser(string UserId)
+        {
+            var users = await _userRepository.GetByUser(UserId);
 
+            return Ok(users);
+        }
         /// <summary>
         /// Actualiza la información de un usuario.
         /// </summary>

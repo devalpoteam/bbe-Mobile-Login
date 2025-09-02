@@ -10,12 +10,13 @@ namespace AutService.JwAuthLogin.Application.Contracts
     public interface IUserRepository
     {
         Task<UserToken> GetOrCreateExternalLoginUser(string key, string email, string fullname);
-        Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad);
+        Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad, bool premium, DateTime ultimoPago);
         Task<UserToken> AuthenticateUserAsync(string email, string password);
         Task<bool> CreateRole(string roleName);
         Task<string> AssignRole(string email, string roleName);
         Task<List<string>> GetUserRoles(string email);
         Task<List<UserModel>> GetAllUser();
+        Task<UserModel> GetByUser(string UserId);
         Task<bool> UpdateUserRole(UserModel user);
         Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal user);
         Task<string> ForgotPassword(string email);

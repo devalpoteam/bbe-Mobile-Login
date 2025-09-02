@@ -4,6 +4,7 @@ using AutService.JwAuthLogin.Domain.Exceptions;
 using AutService.JwAuthLogin.Domain.Models.Auth;
 using AutService.JwAuthLogin.Domain.Models.Request;
 using AutService.JwAuthLogin.Domain.Models.Response;
+using AutService.JwAuthLogin.Infrastructure.Migrations;
 
 namespace AutService.JwAuthLogin.Infrastructure.Repositories
 {
@@ -50,7 +51,7 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 return null;
             }
         }
-        public async Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad)
+        public async Task<IdentityResult> CreateUserAsync(string email, string password, string fullname, string sexo, string edad, bool premium, DateTime ultimoPago)
         {
             var existingUser = await _userManager.FindByEmailAsync(email);
             if (existingUser != null)
@@ -65,6 +66,9 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 FullName = fullname,
                 Sexo = sexo,
                 Edad = edad,
+                premium = false,
+                ultimoPago = ultimoPago
+
             };
 
             var result = await _userManager.CreateAsync(user, password);
@@ -82,7 +86,8 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             {
                 throw new AppException("Email o contraseña incorrectos.");
             }
-            var roles = await _userManager.GetRolesAsync(user); // Obtener los roles del usuario
+            var roles = await _userManager.GetRolesAsync(user);
+       
             return GenerateUserToken(user, roles);
         }
         public async Task<bool> CreateRole(string roleName) {
@@ -124,9 +129,32 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             {
                 Email = u.Email,
                 UserId = u.Id,
-                UserName = u.UserName
+                UserName = u.UserName,
+                FullName = u.FullName,
+                Sexo = u.Sexo,
+                Edad = u.Edad,
+                premium = u.premium,
+                ultimoPago = u.ultimoPago
             }).ToListAsync();
         }
+        public async Task<UserModel> GetByUser(string userId)
+        {
+            return await _userManager.Users
+                .Where(u => u.Id == userId) // 👈 filtra por UserId
+                .Select(u => new UserModel
+                {
+                    Email = u.Email,
+                    UserId = u.Id,
+                    UserName = u.UserName,
+                    FullName = u.FullName,
+                    Sexo = u.Sexo,
+                    Edad = u.Edad,
+                    premium = u.premium,
+                    ultimoPago = u.ultimoPago
+                })
+                .FirstOrDefaultAsync(); // devuelve el usuario correcto o null
+        }
+
         public async Task<bool> UpdateUserRole(UserModel model)
         {
             var user = await _userManager.FindByIdAsync(model.UserId);
@@ -137,6 +165,9 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
 
             user.Email = model.Email;
             user.UserName = model.UserName;
+            user.FullName = model.FullName;
+            user.Sexo = model.Sexo;
+            user.Edad = model.Edad;
 
             var result = await _userManager.UpdateAsync(user);
             if (!result.Succeeded)
@@ -279,7 +310,8 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
                 UserId = user.Id,
                 Email = user.Email,
                 Token = token,
-                Expires = expires
+                Expires = expires,
+                premium = user.premium
             };
         }
         #endregion

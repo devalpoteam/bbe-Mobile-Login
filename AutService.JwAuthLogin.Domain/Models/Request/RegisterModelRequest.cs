@@ -16,5 +16,7 @@ namespace AutService.JwAuthLogin.Domain.Models.Request
         public string FullName { get; set; }
         public string Sexo { get; set; }
         public string Edad { get; set; }
+        public bool premium { get; set; } = false;
+        public DateTime ultimoPago { get; set; }
     }
 }
