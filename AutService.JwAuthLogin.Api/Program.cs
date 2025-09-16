@@ -21,7 +21,8 @@ try
     builder.Services.TryAdd(ServiceDescriptor.Singleton<ILoggerFactory, LoggerFactory>());
     builder.Services.AddHostedService<TokenCleanupService>();
     builder.Services.AddMvc(options => options.RespectBrowserAcceptHeader = true);
-  
+    builder.Services.AddTransient<EmailService>();
+
     var app = builder.Build();
 
     app.MapSwagger();

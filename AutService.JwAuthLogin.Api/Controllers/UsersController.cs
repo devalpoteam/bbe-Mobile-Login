@@ -1,5 +1,4 @@
 ﻿using AutService.JwAuthLogin.Application.Contracts;
-using AutService.JwAuthLogin.Application.Services;
 using AutService.JwAuthLogin.Domain.Models.Request;
 using AutService.JwAuthLogin.Domain.Models.Response;
 using Microsoft.AspNetCore.Authorization;
@@ -8,13 +7,16 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using ResetPasswordRequest = AutService.JwAuthLogin.Domain.Models.Request.ResetPasswordRequest;
 
+
 namespace AutService.JwAuthLogin.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController(IUserRepository userRepository) : ControllerBase
+    public class UsersController(IUserRepository userRepository, EmailService emailService) : ControllerBase
     {
         private readonly IUserRepository _userRepository = userRepository;
+
+        private readonly EmailService _emailService = emailService;
 
         /// <summary>
         /// Obtiene una lista de todos los usuarios registrados.
@@ -78,39 +80,44 @@ namespace AutService.JwAuthLogin.Api.Controllers
             var result = await _userRepository.ChangePassword(model, User);
             if (!result)
             {
-                return BadRequest(new { message = "o se pudo cambiar la contraseña." });
+                return BadRequest(new { message = "No se pudo cambiar la contraseña." });
             }
             return Ok(new { message = "Contraseña cambiada con éxito." });
         }
-
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest model)
         {
             if (!ModelState.IsValid)
-            {
                 return BadRequest(ModelState);
-            }
 
-            var resetToken = await _userRepository.ForgotPassword(model.Email);
-            if (resetToken == null)
+            var temporaryPassword = await _userRepository.ForgotPassword(model.Email);
+
+            // No revelar si el email existe
+            if (temporaryPassword == null)
             {
-                // No revelamos si el email existe por razones de seguridad
-                return Ok(new { message = "Si el correo está registrado, se enviará un email con instrucciones para restablecer la contraseña." });
+                return Ok(new
+                {
+                    message = "Si el correo está registrado, se enviará un email con instrucciones para iniciar sesión."
+                });
             }
 
-            // Opcional: Enviar un enlace completo (si tienes una URL de frontend configurada)
-            var resetUrl = $"https://frontend-url/reset-password?token={Uri.EscapeDataString(resetToken)}&email={Uri.EscapeDataString(model.Email)}";
-            await EmailService.SendEmailAsync(
-                      model.Email,
-                      "Restablecimiento de contraseña",
-                      $"Usa este enlace para restablecer tu contraseña: {resetUrl}",
-                      $"<p>Usa este enlace para restablecer tu contraseña:</p><a href=\"{resetUrl}\">Restablecer contraseña</a>",
-                      "FBT3HAJ2SD6FJVCN6SF58PGL"
-                  );
+            // Enviar contraseña provisional por email
+            await _emailService.SendEmailAsync(
+                model.Email,
+                "Contraseña provisional",
+                $"Tu contraseña provisional es: {temporaryPassword}",
+                $"<p>Tu contraseña provisional es:</p><strong>{temporaryPassword}</strong>" +
+                $"<br>Esta es una contraseña temporal. Por motivos de seguridad, le recomendamos actualizarla cuanto antes desde la sección Configuraciones de su Perfil."
+                
+            );
 
-            return Ok(new { message = "Si el correo está registrado, se enviará un email con instrucciones para restablecer la contraseña." });
+            return Ok(new
+            {
+                message = "Si el correo está registrado, se enviará un email con instrucciones para iniciar sesión."
+            });
         }
 
+        //restabecer contraseña con token 
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest model)
         {

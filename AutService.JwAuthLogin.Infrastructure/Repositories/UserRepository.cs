@@ -177,34 +177,57 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
 
             return true;// Ok(new { message = "Usuario actualizado con éxito." });
         }
-        public async Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal User)
+        public async Task<bool> ChangePassword(ChangePassword model, ClaimsPrincipal userPrincipal)
         {
-            var user = await _userManager.GetUserAsync(User);
+            // Buscar el email desde los claims
+            var email = userPrincipal.FindFirstValue(ClaimTypes.Email);
+            if (string.IsNullOrEmpty(email))
+                return false;
+
+            // Buscar usuario por email
+            var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
-            {
                 return false;
+
+            // Si el usuario no tiene contraseña (por login externo)
+            if (!await _userManager.HasPasswordAsync(user))
+            {
+                var addResult = await _userManager.AddPasswordAsync(user, model.NewPassword);
+                return addResult.Succeeded;
             }
+
+            // Cambiar contraseña
             var result = await _userManager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
-
-            if (!result.Succeeded)
-            {
-                return false;
-            }
-
-            return true;
+            return result.Succeeded;
         }
         public async Task<string> ForgotPassword(string email)
         {
             var user = await _userManager.FindByEmailAsync(email);
             if (user == null)
             {
-                // No revelamos si el email existe por razones de seguridad
+                // No revelamos si el email existe por seguridad
                 return null;
             }
-            // Generar el token de restablecimiento
+
+            var temporaryPassword = GenerateTemporaryPassword();
             var resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
-            return resetToken;
+
+            var result = await _userManager.ResetPasswordAsync(user, resetToken, temporaryPassword);
+            if (!result.Succeeded)
+                return null;
+
+            return temporaryPassword;
         }
+
+        // Método simple para generar contraseña provisional
+        private string GenerateTemporaryPassword(int length = 8)
+        {
+            const string chars = "ABCDEFGHJKLMNOPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
         public async Task<bool> ResetPassword(string email,string Token, string NewPassword)
         {
             var user = await _userManager.FindByEmailAsync(email);
@@ -275,14 +298,15 @@ namespace AutService.JwAuthLogin.Infrastructure.Repositories
             // Crear lista de claims base para el usuario
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, user.Id),
+                
                 new Claim(JwtRegisteredClaimNames.Sub, _configuration["Authentication:Jwt:Subject"] ?? throw new AppException("JWT Subject is not configured.")),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
                 new Claim(JwtRegisteredClaimNames.Iat, DateTime.UtcNow.ToString()),
-                new Claim(ClaimTypes.Name, user.Id),
+                new Claim(ClaimTypes.NameIdentifier, user.Id ?? throw new AppException("UserName is null.")),
                 new Claim(ClaimTypes.Name, user.UserName ?? throw new AppException("UserName is null.")),
-                new Claim(ClaimTypes.NameIdentifier, user.UserName ?? throw new AppException("UserName is null.")),
-                new Claim(ClaimTypes.Email, user.Email ?? throw new AppException("Email is null."))
+
+                new Claim(ClaimTypes.Email, user.Email ?? throw new AppException("Email is null.")),
+                new Claim(ClaimTypes.Name, user.Id)
             };
 
             // Agregar los roles como claims

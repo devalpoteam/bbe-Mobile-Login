@@ -23,7 +23,7 @@ namespace AutService.JwAuthLogin.Application.Contracts
         Task<bool> ResetPassword(string email, string Token, string NewPassword);
         Task<bool> RemoveRole(string email, string roleName);
         Task<bool> DeleteUser(string email);
-
+      
 
     }
 }
